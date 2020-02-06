@@ -18,6 +18,8 @@ float posXTriangulo = 0.0f, posYTriangulo = 0.0f;
 double tiempoActual, tiempoAnterior;
 double velocidadTriangulo = 0.8;
 float rotar = 0.0f;
+float Angulo = 0.0f;
+float velocidadAngular = 90.0;
 
 //CALLBACK ACTION
 
@@ -59,7 +61,7 @@ void actualizar()
 
 	if (estadoDerecha == GLFW_PRESS) 
 	{
-		posXTriangulo += velocidadTriangulo * tiempoDiferencial;
+		Angulo += velocidadAngular * tiempoDiferencial;
 		rotar += 100 * tiempoDiferencial;
 	}
 
@@ -67,21 +69,23 @@ void actualizar()
 
 	if (estadoArriba == GLFW_PRESS)
 	{
-		posYTriangulo += velocidadTriangulo * tiempoDiferencial;
+		posXTriangulo += (velocidadTriangulo * tiempoDiferencial) * cos((Angulo + 90.0) * 3.141592 / 180.0);
+		posYTriangulo += (velocidadTriangulo * tiempoDiferencial) * sin((Angulo + 90.0) * 3.141592 / 180.0);
 	}
 
 	int estadoAbajo = glfwGetKey(window, GLFW_KEY_DOWN);
 
 	if (estadoAbajo == GLFW_PRESS)
 	{
-		posYTriangulo -= velocidadTriangulo * tiempoDiferencial;
+		posXTriangulo -= (velocidadTriangulo * tiempoDiferencial) * cos((Angulo + 90.0) * 3.141592 / 180.0);
+		posYTriangulo -= (velocidadTriangulo * tiempoDiferencial) * sin((Angulo + 90.0) * 3.141592 / 180.0);
 	}
 	
 	int estadoIzquierda = glfwGetKey(window, GLFW_KEY_LEFT);
 
 	if (estadoIzquierda == GLFW_PRESS) 
 	{
-		posXTriangulo -= velocidadTriangulo * tiempoDiferencial;
+		posXTriangulo -= velocidadAngular * tiempoDiferencial;
 		rotar -= 100 * tiempoDiferencial;
 	}
 
@@ -94,9 +98,11 @@ void dibujar()
 {
 	glPushMatrix();
 
-	glTranslatef(0.0, posYTriangulo, 0.0f);
+	glTranslatef(posXTriangulo, posYTriangulo, 0.0f);
 
 	glRotatef(rotar, 0.0, 0.0, 1.0);
+
+	glScalef(0.4f, 0.7, 0.7f);
 
 	glBegin(GL_TRIANGLES);
 
